@@ -4,15 +4,17 @@ SoftwareSerial BTserial(10, 11);
 #define LED1 7 
 #define LED2 8
 #define LED3 9 
-#define BUTTON 6 
-#define pushButtonPin 5
+#define BUTTON 6 // potentiometer
+#define pushButtonPin 5 // cruise button
 
-int potValue =0; // potentismeter value
+int potValue =0; // potentiometer value
 int potValueMapped = 0;
 bool buttonState;
-bool pushButtonState = 0, buttonPressed = 0;
+bool pushButtonState = 0;
+bool buttonPressed = 0;
 int batteryLevel = 3; 
 float voltage; 
+bool slowdownFlag = false;
 
 void setup() {
 
@@ -28,6 +30,41 @@ void setup() {
   digitalWrite(LED3, HIGH); 
 }
 
+
+/*
+ * sends out bluetooth signal to slave
+ * params: potentiometer input value
+ */
+function sendSignalToSlave(int potentiometerValue){
+  // mapping potentiometer value to degrees
+  int potValueMapped = map(potentiometerValue, 0, 1023, 0, 179);
+  BTserial.write(potValueMapped);
+}
+
+/*
+ * controls acceleration
+ */
+function acceleration(){
+
+}
+
+/*
+ * controls deacceleration
+ */
+function deacceleration(){
+
+}
+
+/*
+ * 
+ */
+function checkBrake(int potentiometerValue){
+  // check if potentiometer is pressed down
+  // if yes, brake
+  if(potentiometerValue < 80/180*1023 ) {
+    sendSignalToSlave( potentiometerValue)
+  }
+}
 
 void loop() {
 
@@ -52,6 +89,8 @@ void loop() {
     
   }
 
+  // the potentiometer natural state is around 80 to 90 degrees
+
   if (potValueMapped > 80 && potValueMapped < 90)
   {
     batteryLevel = BTserial.read();
@@ -65,7 +104,29 @@ void loop() {
     
   } 
     delay(50); //changed from 50 to 10, might fix jerking issue 
+
+  /*
+   * if cruise button is pressed, check potentiometer value
+   * if cruise button is pressed, it should keep constant speed
+   * if cruise button is released, it should slow down
+   */
+  if(pushButtonState){
+    slowdownFlag = false; 
+  }
   
-}
+
+  // later get rid of if, since it complements the first scenerio
+  if(!pushButtonState){
+    slowdownFlag = true;
+  }
+
+  /*
+   * send out slow down signal
+   */
+  if(slowdownFlag){
+
+  }
+  
+} // loop ends here 
 
 

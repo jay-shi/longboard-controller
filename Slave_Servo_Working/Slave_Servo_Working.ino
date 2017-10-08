@@ -7,13 +7,31 @@ SoftwareServo ESC;
 
 Servo myServo; 
 int servoSpeed = 90, servoSpeedTemp, servoSpeedTemp2; //rest position of motor
-int curVal = 90; //current value of the poteteniomter
+int curVal = 90; //current value of the potentiomter
 int voltageSensorValue; 
 int brakeSpeed = 1; 
 int buttonTerminate = 0; 
-int batteryLevel = 3; 
 
-float voltage; 
+
+/*
+ * check and send battery level
+ */
+function sendBatteryLevel(){
+  
+  int voltageSensorValue = analogRead(A0);
+  float voltage = voltageSensorValue * (5.0/1023.0); 
+
+  if(voltage > 4.25){
+    BTserial.write(3); 
+    return;
+  }else if(voltage > 4.05){
+    BTserial.write(2); 
+    return;
+  }else{
+    BTserial.write(1);
+    return;
+  }
+}
 
 void setup() {
   
@@ -66,21 +84,7 @@ void loop() {
     servoSpeed = BTserial.read();
 
   }
-  
-  
-  voltageSensorValue = analogRead(A0);
-  voltage = voltageSensorValue * (5.0/1023.0); 
-  if(voltage > 4.25){
-      batteryLevel = 3; 
-      return; //ends program here
-    }
-  else if(voltage > 4.05){
-    batteryLevel = 2; 
-  }
-  else{
-    batteryLevel = 1; 
-  }
-  BTserial.write(batteryLevel); 
+  sendBatteryLevel();
   delay(50);
   
 }
