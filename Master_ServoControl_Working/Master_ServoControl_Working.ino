@@ -15,6 +15,8 @@ bool buttonPressed = 0;
 int batteryLevel = 3; 
 float voltage; 
 bool slowdownFlag = false;
+const int naturalStateMin = 80;
+const int naturalStateMax = 100;
 
 void setup() {
 
@@ -56,18 +58,26 @@ function deacceleration(){
 }
 
 /*
- * 
+ * check if potentiometer is pressed down
+ * if yes, brake
  */
-function checkBrake(int potentiometerValue){
-  // check if potentiometer is pressed down
-  // if yes, brake
-  if(potentiometerValue < 80/180*1023 ) {
-    sendSignalToSlave( potentiometerValue)
+function checkBrake(int mappedPotValue){
+
+  if(mappedPotValue < naturalStateMin/180*1023 ) {
+      digitalWrite(LED1, LOW); 
+      for(int i=0; i<40; i++){
+        BTserial.write(-10); 
+        delay(50);
+      }
   }
 }
 
 void loop() {
 
+  potValue = analogRead(A0); 
+  potValueMapped = map(potValue, 0, 1023, 0, 179);
+  checkBrake(potValueMapped);
+  
   if(!buttonPressed){
     potValue = analogRead(A0); 
     potValueMapped = map(potValue, 0, 1023, 0, 180); //still not sure why these values. 47 seems to be starting value for motor 
