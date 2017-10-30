@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 SoftwareSerial BTserial(10, 11);
 
-#define LED1 7, 
+#define LED1 7,
         LED2 8,
         LED3 9,
         pushButtonPin 5, // cruise button
@@ -21,7 +21,7 @@ final int naturalStateMax = 100;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(9600); //Sets the data rate in bits per second (baud) for serial data transmission
   BTserial.begin(38400);
 
   pinMode(LED1, OUTPUT); 
@@ -44,7 +44,6 @@ void function acceleration(){
  * if yes, brake
  */
 void function defaultBrake(int mappedPotValue){
-  if(mappedPotValue < naturalStateMin) {
       digitalWrite(LED1, LOW); 
       defaultBrakeState = true;
       for(int i=0; i<40; i++){
@@ -96,9 +95,15 @@ void loop() {
   potValueMapped = map(potValue, 0, 1023, 0, 179);
   pushButtonState = digitalRead(pushButtonPin); 
 
-  checkBrake(potValueMapped);
   checkBatteryLevel(potValueMapped);
-  delay(50);
+
+  /**
+   * implement functions that decide which type of brake to use here
+  */
+  if(mappedPotValue < naturalStateMin) {
+    defaultBrake();
+    brake(mappedPotValue);
+  };
   
   if(!buttonPressed){
     potValue = analogRead(potentiometer); 
@@ -106,6 +111,8 @@ void loop() {
     BTserial.write(potValueMapped); 
 //    Serial.println(potValueMapped); 
   }
+
+
   if(pushButtonState == 1){
     if(buttonPressed == 0){
       digitalWrite(LED1, LOW); 
