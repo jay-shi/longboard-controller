@@ -53,7 +53,7 @@ void loop() {
 //      Serial.println(curVal);
     }
 
-    while(curVal > servoSpeed && servoSpeed < 81 && buttonTerminate == 0){
+    while(curVal > servoSpeed && servoSpeed < 81 && ttonTerminate == 0){
       
         servoSpeed = BTserial.read();
 //          Serial.println(servoSpeed); 
