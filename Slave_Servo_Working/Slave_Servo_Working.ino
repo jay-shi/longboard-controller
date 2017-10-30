@@ -4,7 +4,6 @@
 
 SoftwareSerial BTserial(11,10); 
 SoftwareServo ESC; 
-
 Servo myServo; 
 int servoSpeed = 90, servoSpeedTemp, servoSpeedTemp2; //rest position of motor
 int curVal = 90; //current value of the potentiomter

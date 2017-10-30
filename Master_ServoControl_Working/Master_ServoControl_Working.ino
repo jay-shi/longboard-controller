@@ -13,7 +13,7 @@ bool buttonState;
 bool pushButtonState = 0;
 bool buttonPressed = 0;
 float voltage; 
-bool brakeState = 0;
+bool defaultBrakeState = 0; // brake state for brake mode
 bool slowdownFlag = false;
 bool cruiseMode = false; 
 final int naturalStateMin = 80; // min degree of natural state of potentiometer
@@ -43,19 +43,27 @@ void function acceleration(){
  * check if potentiometer is pressed down
  * if yes, brake
  */
-void function brake(int mappedPotValue){
-  /**
-   * implement functions that does adjust to 
-   * how much the potentiometer change here
-   */
+void function defaultBrake(int mappedPotValue){
   if(mappedPotValue < naturalStateMin) {
       digitalWrite(LED1, LOW); 
+      defaultBrakeState = true;
       for(int i=0; i<40; i++){
         BTserial.write(-10); 
         delay(50);
       }
+      defaultBrakeState = false;
   }
   return;
+}
+/**
+ * implement functions that does adjust to 
+ * how much the potentiometer change here
+ */
+void function brake(int mappedPotValue){
+    if(defaultBrakeState) return;
+    /*
+     * implement braking deaccelation value
+     */
 }
 
 /*
@@ -76,6 +84,10 @@ void function checkBatteryLevel(int mappedPotValue){
       digitalWrite(LED2, LOW); 
       return;
   }
+}
+
+void function stopBraking(){
+
 }
 
 void loop() {
