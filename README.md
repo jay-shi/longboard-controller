@@ -9,27 +9,21 @@ This project involves using two arduino mini and two HC50 Bluetooth Sets. One ar
 ## Architecture Flow:
 
 ## Use:
-This web app is used as a example to show how a login web app can be build using MEAN stack. User can sign up a new account and the account data will be stored in database hosted online. Then users can log in the web app using the account they just signed up.
+
 
 ## RoadMap:
   - [x] 1. Configure design details
-  - [x] 2. Add REST service components
-  - [x] 3. Host Mongo database on Atlas and connect it to Nodejs Server
-  - [x] 4. Deploy NodeJS server to Heroku
-  - [x] 5. Deploy Angular web app to Firebase
-  - [ ] 6. Implement password hashing to server
-  - [ ] 7. Unit tests on Angular frontend using Karma-Jasmine
-  - [ ] 8. Unit tests on Nodejs server using Mocha, Chai and Sinon
-  - [ ] 9. Integration Test using Protractor
+  - [x] 2. Implementing the Longboard (CADing, Machining, Prototyping)
+  - [x] 3. Connect two Arduino Mini
+  - [x] 4. Test longboard
+  - [ ] 5. Fix bugs and improve design
 
-## Main Frameworks, Dependencies and Dev Tools:
-* **Frontend:** Angular4 in Typescript, HTML, CSS3, Bootstrap and Fontawesome
-* **Server:** NodeJS, ExpressJs and Mongoose
-* **Database:** MongoDB
-* **Deployment:** Firebase, Heroku, Atlas
-* **Dev Tools:** Aangular-CLI, Express-generator, Postman, Nodemon, Google Chrome Toolbar
+## Dev Tools and core Electrical components:
+* **Arduino Mini and Servo library** 
+* **ESC**
+
 
 ## Credits
-**The mechanical and electrical designee is Josh Lee and Steven Kim**
+**The mechanical and electrical designees are Josh Lee and Steven Kim**
 
 ## More details will be updated as the project progresses
