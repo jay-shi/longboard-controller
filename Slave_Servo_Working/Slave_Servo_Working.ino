@@ -1,15 +1,15 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
-#define voltageSensor A0,
-        ESCConteroller 9;
 
 SoftwareSerial BTserial(11,10);
 Servo ESC; 
 
+static const voltageSensor A0,
+        ESCConteroller 9;
 int servoSpeed = 90; //rest position of motor
-int curVal = 90; //current value of the potentiomter
-int brakeSpeed = 1; 
-int buttonTerminate = 0; 
+    curVal = 90, //current value of the potentiomter
+    brakeSpeed = 1, 
+    buttonTerminate = 0; 
 
 /*
  * check and send battery level
@@ -32,6 +32,8 @@ void function sendBatteryLevel(){
 
 void function accelerate(){
   // implement functions that accelerate esc
+  ESC.write();
+  ESC.writeMicroseconds(2000); // control the duration of one pulse
 }
 
 void function deaccelerate(){

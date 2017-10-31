@@ -1,23 +1,23 @@
 #include <SoftwareSerial.h>
 SoftwareSerial BTserial(10, 11);
 
-#define LED1 7,
+static const LED1 7,
         LED2 8,
         LED3 9,
         pushButtonPin 5, // cruise button
-        potentiometer A0; // potentiometer
+        potentiometer A0, // potentiometer
+        naturalStateMin = 80, // min degree of natural state of potentiometer
+        naturalStateMax = 100;
 
 int potValue =0; // potentiometer value
 int potValueMapped = 0;
 bool buttonState;
 bool pushButtonState = 0;
 bool buttonPressed = 0;
-float voltage; 
 bool defaultBrakeState = 0; // brake state for brake mode
 bool slowdownFlag = false;
 bool cruiseMode = false; 
-final int naturalStateMin = 80; // min degree of natural state of potentiometer
-final int naturalStateMax = 100;
+
 
 void setup() {
 
