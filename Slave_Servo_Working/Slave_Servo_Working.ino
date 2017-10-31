@@ -1,11 +1,10 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
-#include <SoftwareServo.h>
-#define voltageSensor A0;
+#define voltageSensor A0,
+        ESCConteroller 9;
 
-SoftwareSerial BTserial(11,10); 
-SoftwareServo ESC; 
-Servo myServo; 
+SoftwareSerial BTserial(11,10);
+Servo ESC; 
 
 int servoSpeed = 90; //rest position of motor
 int curVal = 90; //current value of the potentiomter
@@ -44,22 +43,21 @@ void function defaultBrake(){
 }
 
 void function cruiseMode(){
-  
+
 }
 
 void setup() {
   Serial.begin(9600); // Sets the data rate in bits per second (baud) for serial data transmission
   BTserial.begin(38400); // Default communication rate of the Bluetooth module
-  myServo.attach(9); 
+  ESC.attach(ESCConteroller); 
 }
 
 void loop() {
-  
   if(BTserial.available()>0){
     while(curVal < servoSpeed && buttonTerminate == 0){
       servoSpeed = BTserial.read();
       curVal = curVal+1;
-      myServo.write(curVal); 
+      ESC.write(curVal); 
       delay(50);
 //    Serial.println(curVal);
     }
@@ -71,24 +69,18 @@ void loop() {
 //          Serial.println(curVal);
           if(servoSpeed > -1){
             brakeSpeed = -(9.0/79.0)*servoSpeed + 10.1139241;
-          }
-          
-          else if(servoSpeed == -10){
+          }else if(servoSpeed == -10){
               brakeSpeed = 5; 
               while(curVal > 82){
                   curVal = curVal - brakeSpeed;
                 }
               buttonTerminate = 1; 
-            }
-      
+          }
           curVal = curVal - brakeSpeed;
-
-          if (curVal < 82)
-          { 
+          if (curVal < 82){ 
             curVal = 82;
           }
-      
-          myServo.write(curVal);
+          ESC.write(curVal);
           delay(50); 
     }
 //    Serial.println(curVal);
