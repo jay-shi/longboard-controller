@@ -12,7 +12,7 @@ This project involves using two arduino mini and two HC50 Bluetooth Sets. One ar
 This web app is used as a example to show how a login web app can be build using MEAN stack. User can sign up a new account and the account data will be stored in database hosted online. Then users can log in the web app using the account they just signed up.
 
 ## RoadMap:
-  - [x] 1. Build Responsive Angular4 login frontend
+  - [x] 1. Configure design details
   - [x] 2. Add REST service components
   - [x] 3. Host Mongo database on Atlas and connect it to Nodejs Server
   - [x] 4. Deploy NodeJS server to Heroku
@@ -29,5 +29,7 @@ This web app is used as a example to show how a login web app can be build using
 * **Deployment:** Firebase, Heroku, Atlas
 * **Dev Tools:** Aangular-CLI, Express-generator, Postman, Nodemon, Google Chrome Toolbar
 
+## Credits
+**The mechanical and electrical designee is Josh Lee and Steven Kim**
 
 ## More details will be updated as the project progresses
