@@ -1,16 +1,22 @@
+/**
+ * Author: @Jay Shi @Steven Kim @Josh Lee
+ * this code is designed to control the controller of the longboard project.
+ * the controller sends out desired speed value to the slave arduino.
+ * the slave arduino will then send throttle value to the ESC to control the value of RPM of motor.
+*/
+
 #include <SoftwareSerial.h>
+
+#define LED1 7
+#define LED2 8
+#define LED3 9
+#define PushButton 5 // cruise button
+#define Potentiometer A0 // potentiometer
+#define NaturalStateMin = 80 // min degree of natural state of potentiometer
+#define NaturalStateMax = 100
+
 SoftwareSerial BTserial(10, 11);
 
-static const LED1 7,
-        LED2 8,
-        LED3 9,
-        pushButtonPin 5, // cruise button
-        potentiometer A0, // potentiometer
-        naturalStateMin = 80, // min degree of natural state of potentiometer
-        naturalStateMax = 100;
-
-int potValue =0; // potentiometer value
-int potValueMapped = 0;
 bool buttonState;
 bool pushButtonState = 0;
 bool buttonPressed = 0;
@@ -33,10 +39,27 @@ void setup() {
 }
 
 /*
- * controls acceleration
+ * sends acceleration to Bluetooth
  */
-void function acceleration(){
+void function sendAccelerationValue(){
 
+}
+
+/*
+ * sends acceleration to Bluetooth
+ */
+void function sendDeaccelerationValue(){
+
+}
+
+/**
+ * implement functions that reads off the wanted speed from controller
+*/
+int function getSpeed(){
+  int potValue = analogRead(A0); 
+  int mappedSpeed = map(potValue, 0, 1023, 0, 179); // potentiometer value ranges from 0-1023
+  pushButtonState = digitalRead(pushButtonPin); 
+  return mappedSpeed;
 }
 
 /*
@@ -90,10 +113,6 @@ void function stopBraking(){
 }
 
 void loop() {
-
-  potValue = analogRead(A0); 
-  potValueMapped = map(potValue, 0, 1023, 0, 179);
-  pushButtonState = digitalRead(pushButtonPin); 
 
   checkBatteryLevel(potValueMapped);
 
