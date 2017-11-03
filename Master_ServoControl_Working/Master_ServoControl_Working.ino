@@ -3,6 +3,8 @@
  * this code is designed to control the controller of the longboard project.
  * the controller sends out desired speed value to the slave arduino.
  * the slave arduino will then send throttle value to the ESC to control the value of RPM of motor.
+ * When potentiometer is pulled up, it will control the speed.
+ * When the potentiometer is pulled down, it will cound how long the longboard should deaccelerates.
 */
 
 #include <SoftwareSerial.h>
@@ -12,8 +14,8 @@
 #define LED3 9
 #define PushButton 5 // cruise button
 #define Potentiometer A0 // potentiometer
-#define NaturalStateMin = 80 // min degree of natural state of potentiometer
-#define NaturalStateMax = 100
+#define NaturalStateMin 80 // min degree of natural state of potentiometer
+#define NaturalStateMax 100
 
 SoftwareSerial BTserial(10, 11);
 
@@ -41,8 +43,10 @@ void setup() {
 /*
  * sends acceleration to Bluetooth
  */
-void function sendAccelerationValue(){
-
+void function sendSpeedValue(){
+  int speed = getSpeedFromPotentiometer();
+  BTserial.write(speed);
+  return;
 }
 
 /*
@@ -53,11 +57,32 @@ void function sendDeaccelerationValue(){
 }
 
 /**
+ * get how long the longboard should deaccelerates/brake
+ */
+int function getBrakingTime(){
+
+}
+
+void function sendStop(){
+
+  // implement function that sends stop signal to the BT
+}
+
+bool function getButtonSignal(){
+  bool buttonPushed = analogRead(PushButton);
+  return buttonPushed;
+}
+
+bool function checkIfCruiseMode(){
+  return getButtonSignal();
+}
+
+/**
  * implement functions that reads off the wanted speed from controller
 */
-int function getSpeed(){
-  int potValue = analogRead(A0); 
-  int mappedSpeed = map(potValue, 0, 1023, 0, 179); // potentiometer value ranges from 0-1023
+int function getSpeedFromPotentiometer(){
+  int potValue = analogRead(Potentiometer); // reads potentiometer value
+  int mappedSpeed = map(potValue, 0, 1023, 0, 179); // map potentiometer value to 0-180 for ESC
   pushButtonState = digitalRead(pushButtonPin); 
   return mappedSpeed;
 }
@@ -91,7 +116,7 @@ void function brake(int mappedPotValue){
 /*
  * check battery level
  */
-void function checkBatteryLevel(int mappedPotValue){
+void function displayBatteryLevel(int mappedPotValue){
   // wont check battery if the controller is in use
   if (mappedPotValue < naturalStateMin || potValueMapped > naturalStateMax){
       return;
@@ -116,9 +141,7 @@ void loop() {
 
   checkBatteryLevel(potValueMapped);
 
-  /**
-   * implement functions that decide which type of brake to use here
-  */
+  //implement functions that decide which type of brake to use here
   if(mappedPotValue < naturalStateMin) {
     defaultBrake();
     brake(mappedPotValue);
