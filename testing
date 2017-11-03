@@ -1,0 +1,12 @@
+#include <Servo.h>
+
+Servo ESC; 
+
+void setup() {
+  ESC.attach(9); 
+}
+
+void loop() {
+    ESC.write(10);
+    ESC.writeMicroseconds(2000);
+}

@@ -90,7 +90,6 @@ void loop() {
 
   }
 
-
   sendBatteryLevel();
   delay(50);
   
