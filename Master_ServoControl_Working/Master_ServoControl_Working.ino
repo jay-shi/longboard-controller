@@ -19,12 +19,9 @@
 
 SoftwareSerial BTserial(10, 11);
 
-bool buttonState;
 bool pushButtonState = 0;
-bool buttonPressed = 0;
-bool defaultBrakeState = 0; // brake state for brake mode
-bool slowdownFlag = false;
-bool cruiseMode = false; 
+bool stopModeOn = false;
+int currentSpeed;
 
 
 void setup() {
@@ -41,86 +38,52 @@ void setup() {
 }
 
 /*
- * sends acceleration to Bluetooth
+ * sends value to Slave arduino via Bluetooth
  */
-void function sendSpeedValue(){
-  int speed = getSpeedFromPotentiometer();
+void function sendToSlave(int speed){
   BTserial.write(speed);
   return;
 }
 
-/*
- * sends acceleration to Bluetooth
+/**
+ * check if button is being pressed
  */
-void function sendDeaccelerationValue(){
-
+bool function checkButtonState(){
+  return  analogRead(PushButton);
 }
 
 /**
- * get how long the longboard should deaccelerates/brake
+ * functions that reads off the wanted speed from controller
  */
-int function getBrakingTime(){
-
-}
-
-void function sendStop(){
-
-  // implement function that sends stop signal to the BT
-}
-
-bool function getButtonSignal(){
-  bool buttonPushed = analogRead(PushButton);
-  return buttonPushed;
-}
-
-bool function checkIfCruiseMode(){
-  return getButtonSignal();
-}
-
-/**
- * implement functions that reads off the wanted speed from controller
-*/
-int function getSpeedFromPotentiometer(){
+int function mapPotentiometerToSpeed(){
   int potValue = analogRead(Potentiometer); // reads potentiometer value
-  int mappedSpeed = map(potValue, 0, 1023, 0, 179); // map potentiometer value to 0-180 for ESC
-  pushButtonState = digitalRead(pushButtonPin); 
+  int mappedSpeed = map(potValue, 570 , 1023, 0, 179); // map potentiometer value to 0-180 for ESC
+  return mappedSpeed;
+}
+
+/**
+ * functions that reads off the wanted speed from controller
+ */
+int function mapPotentiometerToSpeed(){
+  int potValue = analogRead(Potentiometer); // reads potentiometer value
+  int mappedSpeed = map(potValue, 570 , 1023, 0, 179); // map potentiometer value to 0-180 for ESC
   return mappedSpeed;
 }
 
 /*
- * check if potentiometer is pressed down
- * if yes, brake
+ * stop the motor completely
  */
-void function defaultBrake(int mappedPotValue){
-      digitalWrite(LED1, LOW); 
-      defaultBrakeState = true;
-      for(int i=0; i<40; i++){
-        BTserial.write(-10); 
-        delay(50);
-      }
-      defaultBrakeState = false;
-  }
+void function stopMotor(){
+  digitalWrite(LED1, LOW); 
+  sendToSlave(0);
+  stopModeOn = true;
   return;
-}
-/**
- * implement functions that does adjust to 
- * how much the potentiometer change here
- */
-void function brake(int mappedPotValue){
-    if(defaultBrakeState) return;
-    /*
-     * implement braking deaccelation value
-     */
 }
 
 /*
  * check battery level
  */
 void function displayBatteryLevel(int mappedPotValue){
-  // wont check battery if the controller is in use
-  if (mappedPotValue < naturalStateMin || potValueMapped > naturalStateMax){
-      return;
-  }
   int batteryLevel = BTserial.read();
   if(batteryLevel == 2){
       digitalWrite(LED1, LOW); 
@@ -133,61 +96,24 @@ void function displayBatteryLevel(int mappedPotValue){
   }
 }
 
-void function stopBraking(){
-
-}
-
 void loop() {
 
   checkBatteryLevel(potValueMapped);
+  bool buttonPressed = checkButtonState();
+  int mappedValue = mapPotentiometer();
+  if( mappedValue > NaturalStateMax){
+    bool accelerationModeOn = true;
+  }else if(mappedValue < NaturalStateMin){
+    bool brakeModeOn = true;
+  }else{
+    //
+  }
+  while(buttonPressedOn && accelerationModeOn){
 
-  //implement functions that decide which type of brake to use here
-  if(mappedPotValue < naturalStateMin) {
-    defaultBrake();
-    brake(mappedPotValue);
-  };
-  
-  if(!buttonPressed){
-    potValue = analogRead(potentiometer); 
-    potValueMapped = map(potValue, 0, 1023, 0, 179); //still not sure why these values. 47 seems to be starting value for motor 
-    BTserial.write(potValueMapped); 
-//    Serial.println(potValueMapped); 
+    currentSpeed = mappedValue();
+    buttonPressed = checkButtonState();
   }
 
-
-  if(pushButtonState == 1){
-    if(buttonPressed == 0){
-      digitalWrite(LED1, LOW); 
-      for(int i=0; i<40; i++){
-        BTserial.write(-10); 
-      }
-      buttonPressed = 1; 
-      delay(50); 
-    } 
-  }
-
-  /*
-   * if cruise button is pressed, check potentiometer value
-   * if cruise button is pressed, it should keep constant speed
-   * if cruise button is released, it should slow down
-   */
-  if(pushButtonState){
-    slowdownFlag = false; 
-  }
-  
-
-  // later get rid of if, since it complements the first scenerio
-  if(!pushButtonState){
-    slowdownFlag = true;
-  }
-
-  /*
-   * send out slow down signal
-   */
-  if(slowdownFlag){
-
-  }
-  
 } // loop ends here 
 
 
