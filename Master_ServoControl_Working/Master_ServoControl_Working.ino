@@ -21,7 +21,6 @@
 SoftwareSerial BTserial(10, 11);
 bool pushButtonState = 0;
 int currentSpeed;
-
 void setup() {
 
   Serial.begin(9600); //Sets the data rate in bits per second (baud) for serial data transmission
@@ -133,8 +132,8 @@ void loop() {
   }
 
   // stop
-  if(stopModeOn){
-    stopMotor();
+  if(stopModeOn || !buttonPressed){
+    sendToSlave(0);
   }  
 
 } // loop ends here 
