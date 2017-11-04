@@ -16,13 +16,11 @@
 #define Potentiometer A0 // potentiometer
 #define NaturalStateMin 80 // min degree of natural state of potentiometer
 #define NaturalStateMax 100
+#define CompletelyStopValue 5
 
 SoftwareSerial BTserial(10, 11);
-
 bool pushButtonState = 0;
-bool stopModeOn = false;
 int currentSpeed;
-
 
 void setup() {
 
@@ -53,31 +51,43 @@ bool function checkButtonState(){
 }
 
 /**
- * functions that reads off the wanted speed from controller
- */
-int function mapPotentiometerToSpeed(){
-  int potValue = analogRead(Potentiometer); // reads potentiometer value
-  int mappedSpeed = map(potValue, 570 , 1023, 0, 179); // map potentiometer value to 0-180 for ESC
-  return mappedSpeed;
+ * check if longboard needs accleration
+*/
+bool function checkAccelerationState(int mappedValue){
+  return mappedValue >= NaturalStateMax;
 }
+
+/**
+ * check if longboard needs brake
+*/
+bool function checkBrakeState(int mappedValue){
+  return (mappedValue <= NaturalStateMin)&&(mappedValue >= CompletelyStopValue);
+}
+
+
+/**
+ * check if longboard needs completely stop
+*/
+bool function checkStopState(int mappedValue){
+  return mappedValue < CompletelyStopValue ;
+}
+
 
 /**
  * functions that reads off the wanted speed from controller
  */
-int function mapPotentiometerToSpeed(){
-  int potValue = analogRead(Potentiometer); // reads potentiometer value
-  int mappedSpeed = map(potValue, 570 , 1023, 0, 179); // map potentiometer value to 0-180 for ESC
+int function mappedValuetoSpeed(int mappedValue){
+  int mappedSpeed = map(mappedValue, 100, 180 , 0, 180); // map potentiometer value to 0-180 for ESC
   return mappedSpeed;
 }
 
-/*
- * stop the motor completely
+/**
+ * functions that get mappedValue from controller
  */
-void function stopMotor(){
-  digitalWrite(LED1, LOW); 
-  sendToSlave(0);
-  stopModeOn = true;
-  return;
+int function getMappedPotentiometerValue(){
+  int potValue = analogRead(Potentiometer); // reads potentiometer value
+  int mappedValue = map(potValue, 0 , 1023, 0, 180); // map potentiometer value to 0-180 for ESC
+  return mappedValue;
 }
 
 /*
@@ -98,21 +108,34 @@ void function displayBatteryLevel(int mappedPotValue){
 
 void loop() {
 
-  checkBatteryLevel(potValueMapped);
+  int mappedValue = getMappedPotentiometerValue();
   bool buttonPressed = checkButtonState();
-  int mappedValue = mapPotentiometer();
-  if( mappedValue > NaturalStateMax){
-    bool accelerationModeOn = true;
-  }else if(mappedValue < NaturalStateMin){
-    bool brakeModeOn = true;
-  }else{
-    //
-  }
-  while(buttonPressedOn && accelerationModeOn){
+  bool accelerationModeOn= checkAccelerationState(mappedValue);
+  bool brakeModeOn = checkBrakeState(mappedValue);
+  bool stopModeOn = checkStopState(mappedValue);
 
-    currentSpeed = mappedValue();
+  // accelerates
+  while(buttonPressedOn && accelerationModeOn){
+    mappedValue = getMappedPotentiometerValue();
+    int mappedSpeed = mappedValuetoSpeed(mappedValue);
+    sendToSlave(mappedSpeed);
     buttonPressed = checkButtonState();
+    displayBatteryLevel();
+    stopModeOn = false;
+    delay(500);
   }
+
+  // brake
+  while(brakeModeOn){
+    sendToSlave(-10);
+    brakeModeOn = checkBrakeState(mappedValue);
+    delay(500);
+  }
+
+  // stop
+  if(stopModeOn){
+    stopMotor();
+  }  
 
 } // loop ends here 
 
