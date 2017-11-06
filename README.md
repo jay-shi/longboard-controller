@@ -1,7 +1,7 @@
 # Electrical Longboard (In Process)
 
 **An arduino based project that transforms a regular longboard into a electrical longboard.
-This project involves using two arduino mini and two HC50 Bluetooth Sets. One arduino mini works as a master that controls the slave arduino**
+This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC and one BLDC motor. One arduino mini works as a master that controls the slave arduino**
 
 ## Demo Video:
 
