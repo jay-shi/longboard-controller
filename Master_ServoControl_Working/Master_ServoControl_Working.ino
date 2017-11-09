@@ -27,7 +27,7 @@ void setup() {
   BTserial.begin(38400);
 
   pinMode(LED1, OUTPUT); 
-  pinMode(pushButtonPin, INPUT); 
+  pinMode(PushButton, INPUT); 
 
   digitalWrite(LED1, HIGH); 
   digitalWrite(LED2, HIGH); 
@@ -37,7 +37,7 @@ void setup() {
 /*
  * sends value to Slave arduino via Bluetooth
  */
-void function sendToSlave(int speed){
+void sendToSlave(int speed){
   BTserial.write(speed);
   return;
 }
@@ -45,21 +45,21 @@ void function sendToSlave(int speed){
 /**
  * check if button is being pressed
  */
-bool function checkButtonState(){
+bool checkButtonState(){
   return  analogRead(PushButton);
 }
 
 /**
  * check if longboard needs accleration
 */
-bool function checkAccelerationState(int mappedValue){
+bool checkAccelerationState(int mappedValue){
   return mappedValue >= NaturalStateMax;
 }
 
 /**
  * check if longboard needs brake
 */
-bool function checkBrakeState(int mappedValue){
+bool checkBrakeState(int mappedValue){
   return (mappedValue <= NaturalStateMin)&&(mappedValue >= CompletelyStopValue);
 }
 
@@ -67,7 +67,7 @@ bool function checkBrakeState(int mappedValue){
 /**
  * check if longboard needs completely stop
 */
-bool function checkStopState(int mappedValue){
+bool checkStopState(int mappedValue){
   return mappedValue < CompletelyStopValue ;
 }
 
@@ -75,7 +75,7 @@ bool function checkStopState(int mappedValue){
 /**
  * functions that reads off the wanted speed from controller
  */
-int function mappedValuetoSpeed(int mappedValue){
+int mappedValuetoSpeed(int mappedValue){
   int mappedSpeed = map(mappedValue, 100, 180 , 0, 180); // map potentiometer value to 0-180 for ESC
   return mappedSpeed;
 }
@@ -83,7 +83,7 @@ int function mappedValuetoSpeed(int mappedValue){
 /**
  * functions that get mappedValue from controller
  */
-int function getMappedPotentiometerValue(){
+int getMappedPotentiometerValue(){
   int potValue = analogRead(Potentiometer); // reads potentiometer value
   int mappedValue = map(potValue, 0 , 1023, 0, 180); // map potentiometer value to 0-180 for ESC
   return mappedValue;
@@ -92,7 +92,7 @@ int function getMappedPotentiometerValue(){
 /*
  * check battery level
  */
-void function displayBatteryLevel(int mappedPotValue){
+void displayBatteryLevel(){
   int batteryLevel = BTserial.read();
   if(batteryLevel == 2){
       digitalWrite(LED1, LOW); 
@@ -114,7 +114,7 @@ void loop() {
   bool stopModeOn = checkStopState(mappedValue);
 
   // accelerates
-  while(buttonPressedOn && accelerationModeOn){
+  while(buttonPressed && accelerationModeOn){
     mappedValue = getMappedPotentiometerValue();
     int mappedSpeed = mappedValuetoSpeed(mappedValue);
     sendToSlave(mappedSpeed);
@@ -137,5 +137,3 @@ void loop() {
   }  
 
 } // loop ends here 
-
-

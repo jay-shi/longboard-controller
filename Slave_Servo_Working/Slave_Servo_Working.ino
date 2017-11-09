@@ -7,15 +7,16 @@
 SoftwareSerial BTserial(11,10);
 Servo ESC; 
 
-int servoSpeed = 90; //rest position of motor
+int servoSpeed = 90, //rest position of motor
     curVal = 90, //current value of the potentiomter
     brakeSpeed = 1,
-    currentSpeed=0;
+    currentSpeed=0,
+    receivedValue;
 
 /*
  * check and send battery level to the master arduino
  */
-void function sendBatteryLevel(){
+void sendBatteryLevel(){
   int voltageSensorValue = analogRead(VoltageSensor);
   float voltage = map(voltageSensorValue, 0, 1023.0, 0.0, 5.0); 
   if(voltage > 4.25){
@@ -33,7 +34,7 @@ void function sendBatteryLevel(){
 /**
  * send mappedSpeedValue to ESC
 */
-void function accelerate(int mappedSpeedValue){
+void accelerate(int mappedSpeedValue){
   while(currentSpeed < mappedSpeedValue){
     currentSpeed += 1;
     ESC.write(currentSpeed);
@@ -45,7 +46,7 @@ void function accelerate(int mappedSpeedValue){
 /**
  * send mappedSpeedValue to ESC
 */
-void function deaccelerate(int mappedSpeedValue){
+void deaccelerate(int mappedSpeedValue){
   while(currentSpeed > mappedSpeedValue){
     currentSpeed -= 1;
     ESC.write(currentSpeed);
@@ -57,7 +58,7 @@ void function deaccelerate(int mappedSpeedValue){
 /**
  * stop the longboard. brake at a constant deacceleration value
 */
-void function stop(){
+void stop(){
   while(currentSpeed >= 0){
     currentSpeed -= 1;
     ESC.write(currentSpeed);
@@ -75,7 +76,7 @@ void setup() {
 void loop() {
 
   if(BTserial.available()>0){
-      int receivedValue = BTserial.read();
+      receivedValue = BTserial.read();
   }
 
   if(receivedValue>currentSpeed){
