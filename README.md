@@ -9,7 +9,8 @@ This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC a
 ## Architecture Flow:
 
 ## Use:
-
+1. Master file goes into the master arduino (controller)
+2. Slave file goes into the slave arduino (longboard)
 
 ## RoadMap:
   - [x] 1. Configure design details
@@ -21,7 +22,6 @@ This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC a
 ## Dev Tools and core Electrical components:
 * **Arduino Mini and Servo library** 
 * **ESC**
-
 
 ## Credits
 **The mechanical and electrical designees are Josh Lee and Steven Kim**
