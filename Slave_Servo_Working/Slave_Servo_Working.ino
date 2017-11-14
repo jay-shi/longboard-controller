@@ -4,7 +4,7 @@
 #define VoltageSensor A0
 #define ESCConteroller 9
 
-SoftwareSerial BTserial(11,10);
+SoftwareSerial BTserial(11,10); 
 Servo ESC; 
 
 int servoSpeed = 90, //rest position of motor
@@ -68,7 +68,6 @@ void stop(){
 }
 
 void setup() {
-  Serial.begin(9600); // Sets the data rate in bits per second (baud) for serial data transmission
   BTserial.begin(38400); // Default communication rate of the Bluetooth module
   ESC.attach(ESCConteroller); // connect to ESC
 }
