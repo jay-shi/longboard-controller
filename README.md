@@ -4,7 +4,7 @@
 This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC and one BLDC motor. One arduino mini works as a master that controls the slave arduino**
 
 ## Demo Video:
-
+<img src="./imgs/e-longboard.jpg" width="650" height="350" />
 
 ## Architecture Flow:
 
