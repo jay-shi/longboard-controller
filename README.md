@@ -15,9 +15,11 @@ This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC a
 ## RoadMap:
   - [x] 1. Configure design details
   - [x] 2. Implementing the Longboard (CADing, Machining, Prototyping)
-  - [x] 3. Connect two Arduino Mini
-  - [x] 4. Test longboard
-  - [ ] 5. Fix bugs and improve design
+  - [x] 3. Connect bluetooth modules
+  - [ ] 4. Set up remote controller (master arduino)
+  - [ ] 5. Set up longboard (slave arduino)
+  - [ ] 6. Test longboard
+  - [ ] 7. Fix bugs and improve design
 
 ## Dev Tools and core Electrical components:
 * **Arduino Mini and Servo library** 
