@@ -68,6 +68,7 @@ void stop(){
 }
 
 void setup() {
+  Serial.begin(9600);
   BTserial.begin(38400); // Default communication rate of the Bluetooth module
   ESC.attach(ESCConteroller); // connect to ESC
 }
@@ -76,6 +77,7 @@ void loop() {
 
   if(BTserial.available()>0){
       receivedValue = BTserial.read();
+      Serial.println(receivedValue);
   }
 
   if(receivedValue>currentSpeed){
