@@ -1,4 +1,4 @@
-# Electrical Longboard (In Process)
+# Electrical Longboard (In Progress)
 
 **An arduino based project that transforms a regular longboard into a electrical longboard.
 This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC and one BLDC motor. One arduino mini works as a master that controls the slave arduino**
@@ -22,10 +22,10 @@ This project involves using two arduino mini, two HC50 Bluetooth Sets, one ESC a
   - [ ] 7. Fix bugs and improve design
 
 ## Dev Tools and core Electrical components:
-* **Arduino Mini and Servo library** 
-* **ESC**
+* **Arduino Mini and HC50 Bluetooth Set** 
+* **ESC and BLDC**
 
 ## Credits
-**The mechanical and electrical designees are Josh Lee and Steven Kim**
+**The mechanical and electrical work is done by Josh Lee and Steven Kim**
 
 ## More details will be updated as the project progresses
