@@ -1,10 +1,10 @@
 /**
  * Author: @Jay Shi @Steven Kim @Josh Lee
- * this code is designed to control the controller of the longboard project.
+ * this code is designed for the controller of the longboard project.
  * the controller sends out desired speed value to the slave arduino.
  * the slave arduino will then send throttle value to the ESC to control the value of RPM of motor.
- * When potentiometer is pulled up, it will control the speed.
- * When the potentiometer is pulled down, it will cound how long the longboard should deaccelerates.
+ * When the potentiometer is pulled up, it will control the speed.
+ * When the potentiometer is pulled down, it will count how long the longboard should deaccelerates.
 */
 
 #include <SoftwareSerial.h>
@@ -38,6 +38,7 @@ void setup() {
  * sends value to Slave arduino via Bluetooth
  */
 void sendToSlave(int speed){
+  Serial.println(speed);
   BTserial.write(speed);
   return;
 }
