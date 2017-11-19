@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
 
-SoftwareSerial BTserial(11,10); 
+SoftwareSerial BTserial(10,11); 
 
 void setup() {
   Serial.begin(9600);

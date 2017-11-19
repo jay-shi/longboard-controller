@@ -4,7 +4,7 @@
 #define VoltageSensor A0
 #define ESCConteroller 9
 
-SoftwareSerial BTserial(11,10); 
+SoftwareSerial BTserial(10,11); // enter the correct number
 Servo ESC; 
 
 int servoSpeed = 90, //rest position of motor
