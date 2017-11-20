@@ -14,8 +14,8 @@
 #define LED3 9
 #define PushButton 5 // cruise button
 #define Potentiometer A0 // potentiometer
-#define NaturalStateMin 80 // min degree of natural state of potentiometer
-#define NaturalStateMax 100
+#define NaturalStateMin 75 // min degree of natural state of potentiometer
+#define NaturalStateMax 95
 #define CompletelyStopValue 5
 
 SoftwareSerial BTserial(10, 11);
@@ -47,7 +47,8 @@ void sendToSlave(int speed){
  * check if button is being pressed
  */
 bool checkButtonState(){
-  return  analogRead(PushButton);
+  bool readvalue= digitalRead(PushButton);
+  return !readvalue;
 }
 
 /**
@@ -109,25 +110,34 @@ void displayBatteryLevel(){
 void loop() {
 
   int mappedValue = getMappedPotentiometerValue();
+  Serial.println("mappedValue: ");
+  Serial.println(mappedValue);
   bool buttonPressed = checkButtonState();
+  Serial.println("is button pressed");
+  Serial.println(buttonPressed);
   bool accelerationModeOn= checkAccelerationState(mappedValue);
+  Serial.println("is acceleration mode on");
+  Serial.println(accelerationModeOn);
   bool brakeModeOn = checkBrakeState(mappedValue);
   bool stopModeOn = checkStopState(mappedValue);
 
   // accelerates
   while(buttonPressed && accelerationModeOn){
     mappedValue = getMappedPotentiometerValue();
+    accelerationModeOn= checkAccelerationState(mappedValue);
     int mappedSpeed = mappedValuetoSpeed(mappedValue);
     sendToSlave(mappedSpeed);
     buttonPressed = checkButtonState();
     displayBatteryLevel();
     stopModeOn = false;
+    Serial.println("acceleration");
     delay(500);
   }
 
   // brake
   while(brakeModeOn){
-    sendToSlave(-10);
+    sendToSlave(-1); // how fast the 
+    mappedValue = getMappedPotentiometerValue();
     brakeModeOn = checkBrakeState(mappedValue);
     delay(500);
   }
@@ -136,5 +146,7 @@ void loop() {
   if(stopModeOn || !buttonPressed){
     sendToSlave(0);
   }  
+
+  delay(2000);
 
 } // loop ends here 
