@@ -110,14 +110,8 @@ void displayBatteryLevel(){
 void loop() {
 
   int mappedValue = getMappedPotentiometerValue();
-  Serial.println("mappedValue: ");
-  Serial.println(mappedValue);
   bool buttonPressed = checkButtonState();
-  Serial.println("is button pressed");
-  Serial.println(buttonPressed);
   bool accelerationModeOn= checkAccelerationState(mappedValue);
-  Serial.println("is acceleration mode on");
-  Serial.println(accelerationModeOn);
   bool brakeModeOn = checkBrakeState(mappedValue);
   bool stopModeOn = checkStopState(mappedValue);
 
@@ -147,6 +141,6 @@ void loop() {
     sendToSlave(0);
   }  
 
-  delay(2000);
+  delay(500);
 
 } // loop ends here 

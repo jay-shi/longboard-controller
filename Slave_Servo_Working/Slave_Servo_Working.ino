@@ -37,8 +37,10 @@ void sendBatteryLevel(){
 void accelerate(int mappedSpeedValue){
   while(currentSpeed < mappedSpeedValue){
     currentSpeed += 1;
+    Serial.println("accelerate: ");
+    Serial.println(currentSpeed);
     ESC.write(currentSpeed);
-    delay(1000);
+    delay(500);
   }
   return; 
 }
@@ -49,10 +51,20 @@ void accelerate(int mappedSpeedValue){
 void deaccelerate(int mappedSpeedValue){
   while(currentSpeed > mappedSpeedValue){
     currentSpeed -= 1;
+    Serial.println("deccelerate: ");
+    Serial.println(currentSpeed);
     ESC.write(currentSpeed);
-    delay(1000);
+    delay(500); 
   }
   return; 
+}
+
+void brake(){
+  currentSpeed -= 1;
+  Serial.println("brake: ");
+  Serial.println(currentSpeed);
+  ESC.write(currentSpeed);
+  delay(500);
 }
 
 /**
@@ -61,8 +73,10 @@ void deaccelerate(int mappedSpeedValue){
 void stop(){
   while(currentSpeed >= 0){
     currentSpeed -= 1;
+    Serial.println("Stop: ");
+    Serial.println(currentSpeed);
     ESC.write(currentSpeed);
-    delay(1000);
+    delay(500);
   }
   return; 
 }
@@ -74,26 +88,33 @@ void setup() {
 }
 
 void loop() {
-
   if(BTserial.available()>0){
       receivedValue = BTserial.read();
+      Serial.println("received BT value: ");
       Serial.println(receivedValue);
-  }
+      Serial.println("Current Speed: ");
+      Serial.println(currentSpeed);
+      if(receivedValue>currentSpeed){
+        accelerate(receivedValue);
+        return;
+      }
 
-  if(receivedValue>currentSpeed){
-    accelerate(receivedValue);
-    return;
-  }
+      if(receivedValue< currentSpeed && receivedValue> 0 ){
+        deaccelerate(receivedValue);
+        return;
+      }
 
-  if(receivedValue< currentSpeed && receivedValue> 0 ){
-    deaccelerate(receivedValue);
-    return;
-  }
+      if(receivedValue< 0){
+        brake();
+        return;
+      }
 
-  if(receivedValue == 0){
-    stop();
-    return;
-  }
-  sendBatteryLevel();
+      if(receivedValue == 0){
+        stop();
+        return;
+      }
+      sendBatteryLevel();
+  };
+  delay(500);
 }
 
